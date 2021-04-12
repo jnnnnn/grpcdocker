@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  # this "image" will compile the go code to an executable
+  gobuild: &yamlanchor
+    build: .
+    volumes:
+      - "./src:/src"
+      - "./scripts:/scripts"
+      - "./dist:/dist"
+    working_dir: "/src"
+    entrypoint: "/scripts/gobuild.sh"
+
+  # this "image" will regenerate the protobuf bindings from the .proto file
+  goprotogen:
+    image: namely/protoc-all
+    volumes:
+      - "./src/routeguide_protos:/hogwarts"
+      - "./scripts:/scripts"
+    working_dir: "/hogwarts"
+    entrypoint: "/scripts/goprotogen.sh"
